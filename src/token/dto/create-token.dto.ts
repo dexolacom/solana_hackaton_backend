@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { ERiskType } from 'src/@enums';
 
 export class CreateTokenDto {
@@ -27,12 +27,10 @@ export class CreateTokenDto {
   riskType: string;
 
   @ApiProperty({
-    example: 20,
-    description: 'Distribution percent',
+    example: 5426,
+    description: 'UCID from coinMarketCap',
   })
-  @IsNotEmpty()
-  @IsNumber()
-  distribution: number;
+  coinmarketcapId: number;
 }
 
 export class CreateTokenResponseDto {
@@ -41,7 +39,7 @@ export class CreateTokenResponseDto {
       name: 'Solana',
       symbol: 'SOL',
       riskType: 'Medium',
-      distribution: 20,
+      coinmarketcapId: 5426,
       id: '12f5a256-bc14-4562-b6e8-10252cec39cb',
       created_at: '2024-03-15T14:23:06.205Z',
       updated_at: '2024-03-15T14:23:06.205Z',
