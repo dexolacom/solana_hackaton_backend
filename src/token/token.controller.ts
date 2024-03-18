@@ -19,11 +19,21 @@ export class TokenController {
   }
 
   @Get('list')
+  @ApiOperation({ summary: 'List of all tokens in DB' })
+  @ApiResponse({
+    status: 200,
+    // type: CreateTokenResponseDto,
+  })
   findAll() {
     return this.tokenService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get Token by Id' })
+  @ApiResponse({
+    status: 200,
+    // type: CreateTokenResponseDto,
+  })
   findOne(@Param('id') id: string) {
     return this.tokenService.findOne(+id);
   }

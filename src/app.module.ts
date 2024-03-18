@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppConfig, DatabaseConfig } from './config';
 import { TokenModule } from './token/token.module';
+import { ProjectModule } from './project/project.module';
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { TokenModule } from './token/token.module';
         configService.get('typeorm'),
     }),
     TokenModule,
+    ProjectModule,
+    RateModule,
   ],
   controllers: [AppController],
   providers: [],

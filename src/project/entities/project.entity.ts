@@ -1,4 +1,3 @@
-import { ProjectToken } from 'src/project/entities/projectToken.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,23 +6,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProjectToken } from './projectToken.entity';
 
-@Entity({ name: 'tokens' })
-export class Token {
+@Entity({ name: 'projects' })
+export class Project {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
-
-  @Column()
-  symbol: string;
-
-  @Column({ name: 'risk_type' })
-  riskType: string;
-
-  @Column({ name: 'coinmarketcap_id' })
-  coinmarketcapId: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at?: string;
@@ -31,6 +22,6 @@ export class Token {
   @UpdateDateColumn({ type: 'timestamptz' })
   updated_at?: string;
 
-  @OneToMany(() => ProjectToken, (projectToken) => projectToken.token)
+  @OneToMany(() => ProjectToken, (projectToken) => projectToken.project)
   projectTokens: ProjectToken[];
 }
