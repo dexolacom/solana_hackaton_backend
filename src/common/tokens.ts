@@ -10,13 +10,13 @@ export const tokens = [
   {
     name: 'Solana',
     symbol: 'SOL',
-    riskType: ERiskType.MEDIUM,
+    riskType: ERiskType.LOW,
     coinmarketcapId: 5426,
   },
   {
     name: 'Ethereum',
     symbol: 'ETH',
-    riskType: ERiskType.HIGH,
+    riskType: ERiskType.LOW,
     coinmarketcapId: 1027,
   },
   {
@@ -28,19 +28,19 @@ export const tokens = [
   {
     name: 'Render',
     symbol: 'RNDR',
-    riskType: ERiskType.LOW,
+    riskType: ERiskType.MEDIUM,
     coinmarketcapId: 5690,
   },
   {
     name: 'Helium',
     symbol: 'HNT',
-    riskType: ERiskType.LOW,
+    riskType: ERiskType.MEDIUM,
     coinmarketcapId: 5665,
   },
   {
     name: 'Bonk',
     symbol: 'BONK',
-    riskType: ERiskType.MEDIUM,
+    riskType: ERiskType.HIGH,
     coinmarketcapId: 23095,
   },
   {
@@ -48,5 +48,23 @@ export const tokens = [
     symbol: 'PYTH',
     riskType: ERiskType.HIGH,
     coinmarketcapId: 28177,
+  },
+  {
+    name: 'Raydium',
+    symbol: 'RAY',
+    riskType: ERiskType.HIGH,
+    coinmarketcapId: 8526,
+  },
+  {
+    name: 'Jito',
+    symbol: 'JTO',
+    riskType: ERiskType.HIGH,
+    coinmarketcapId: 28541,
+  },
+  {
+    name: 'dogwifhat',
+    symbol: 'WIF',
+    riskType: ERiskType.HIGH,
+    coinmarketcapId: 28752,
   },
 ];
