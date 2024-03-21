@@ -35,6 +35,6 @@ export class TokenController {
     // type: CreateTokenResponseDto,
   })
   findOne(@Param('id') id: string) {
-    return this.tokenService.findOne(+id);
+    return this.tokenService.findOne(id);
   }
 }
