@@ -6,6 +6,7 @@ import { AppConfig, DatabaseConfig } from './config';
 import { TokenModule } from './token/token.module';
 import { ProjectModule } from './project/project.module';
 import { RateModule } from './rate/rate.module';
+import { SolanaWeb3Module } from './solana-web3/solana-web3.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RateModule } from './rate/rate.module';
     TokenModule,
     ProjectModule,
     RateModule,
+    SolanaWeb3Module,
   ],
   controllers: [AppController],
   providers: [],
