@@ -1,9 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-// import NodeCache from 'node-cache';
-// import { MINUTE_IN_SEC } from 'src/common';
 
-// // Cache
-// const nodeCache = new NodeCache({ stdTTL: MINUTE_IN_SEC * 20 });
 @Injectable()
 export class RateService {
   private logger = new Logger(RateService.name);

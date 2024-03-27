@@ -6,6 +6,7 @@ import { AppConfig, DatabaseConfig } from './config';
 import { TokenModule } from './token/token.module';
 import { ProjectModule } from './project/project.module';
 import { RateModule } from './rate/rate.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RateModule } from './rate/rate.module';
     TokenModule,
     ProjectModule,
     RateModule,
+    CacheModule.register(),
   ],
   controllers: [AppController],
   providers: [],

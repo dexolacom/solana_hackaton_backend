@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
@@ -8,6 +13,9 @@ import { AddProjectDto } from './dto/add-project.dto';
 import { TokenService } from 'src/token/token.service';
 import { Token } from 'src/token/entities/token.entity';
 import { RateService } from 'src/rate/rate.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { MINUTE_IN_MS } from 'src/common';
 
 @Injectable()
 export class ProjectService {
@@ -19,6 +27,7 @@ export class ProjectService {
     private readonly projectTokenRepository: Repository<ProjectToken>,
     private readonly tokenService: TokenService,
     private readonly rateService: RateService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   private async createProject(dto: CreateProjectDto) {
@@ -70,25 +79,30 @@ export class ProjectService {
 
   async getProjectTokens(id: string) {
     try {
-      const project = await this.findOne({ id });
-      const tokens = project.projectTokens.map((i) => i.token.symbol);
-      const rateData = await this.rateService.getTokensInfo(tokens);
-      const result = {
-        name: project.name,
-        tokens: project.projectTokens.map((i) => {
-          const token = rateData[i.token.symbol].find(
-            (item) => item.id == i.token.coinmarketcapId,
-          );
-          return {
-            name: i.token.name,
-            symbol: i.token.symbol,
-            riskType: i.token.riskType,
-            coinPrice: token.quote.USD.price,
-            change24h: token.quote.USD.percent_change_24h,
-            marketCap: token.quote.USD.market_cap,
-          };
-        }),
-      };
+      const cacheKey = id;
+      let result = await this.cacheManager.get(cacheKey);
+      if (!result) {
+        const project = await this.findOne({ id });
+        const tokens = project.projectTokens.map((i) => i.token.symbol);
+        const rateData = await this.rateService.getTokensInfo(tokens);
+        result = {
+          name: project.name,
+          tokens: project.projectTokens.map((i) => {
+            const token = rateData[i.token.symbol].find(
+              (item) => item.id == i.token.coinmarketcapId,
+            );
+            return {
+              name: i.token.name,
+              symbol: i.token.symbol,
+              riskType: i.token.riskType,
+              coinPrice: token.quote.USD.price,
+              change24h: token.quote.USD.percent_change_24h,
+              marketCap: token.quote.USD.market_cap,
+            };
+          }),
+        };
+        await this.cacheManager.set(cacheKey, result, MINUTE_IN_MS);
+      }
       return result;
     } catch (error) {
       throw new BadRequestException(error.message);
