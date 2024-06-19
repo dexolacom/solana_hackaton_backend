@@ -16,6 +16,7 @@ import { ProjectService } from 'src/project/project.service';
 import { EStatus } from 'src/@enums';
 import { tokensWithKey } from 'src/common/tokens';
 import { getAssociatedTokenAddressSync } from '@solana/spl-token';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ListenerService implements OnModuleInit {
@@ -24,6 +25,7 @@ export class ListenerService implements OnModuleInit {
   private readonly coder: BorshCoder = new BorshCoder(IDL as Idl);
 
   constructor(
+    private readonly config: ConfigService,
     private readonly lastSignatureService: LastSignatureService,
     private readonly portfolioService: PortfolioService,
     private readonly projectService: ProjectService,
@@ -35,8 +37,50 @@ export class ListenerService implements OnModuleInit {
 
   private initializeConnection() {
     // Connect to the Solana devnet
-    this.connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+    console.log('initializeConnection', this.config.get('SOLANA_RPC_URL'));
+    this.connection = new Connection(
+      this.config.get('SOLANA_RPC_URL'),
+      'confirmed',
+    );
     this.logger.log('Connected to Solana devnet');
+  }
+
+  async getSignaturesWithBackoff(
+    programPubkey,
+    lastSignature,
+    limit,
+    maxRetries = 10,
+  ) {
+    let retries = 0;
+    let delay = 5000; // Initial delay in milliseconds
+
+    while (retries < maxRetries) {
+      try {
+        console.log('getSignaturesWithBackoff');
+        const response = await this.connection.getSignaturesForAddress(
+          programPubkey,
+          {
+            until: lastSignature,
+            limit: limit,
+          },
+        );
+        return response; // If request is successful, return the response
+      } catch (error) {
+        if (error.response && error.response.status === 429) {
+          // 429 Too Many Requests
+          console.log(
+            `Server responded with 429 Too Many Requests. Retrying after ${delay}ms delay...`,
+          );
+          await this.delay(delay);
+          delay *= 2; // Exponential backoff
+          retries++;
+        } else {
+          // Handle other errors
+          throw error;
+        }
+      }
+    }
+    throw new Error('Max retries reached');
   }
 
   async checkEvents(address: string): Promise<void> {
@@ -47,11 +91,18 @@ export class ListenerService implements OnModuleInit {
 
       console.log('lastSignature', lastSignature);
       const signatures: Array<ConfirmedSignatureInfo> =
-        await this.connection.getSignaturesForAddress(programPubkey, {
-          until: lastSignature,
-          limit: 1000,
-        });
+        // await this.connection.getSignaturesForAddress(programPubkey, {
+        //   until: lastSignature,
+        //   limit: 1000,
+        // });
+        await this.getSignaturesWithBackoff(
+          programPubkey,
+          lastSignature,
+          1000,
+          7,
+        );
 
+      console.log('signatures');
       await this.processSignatures(
         signatures.reverse(),
         programPubkey,
@@ -69,6 +120,7 @@ export class ListenerService implements OnModuleInit {
   ): Promise<void> {
     console.log('processSignatures', signatures);
 
+    console.log('signatures');
     for (const signatureInfo of signatures) {
       const transaction = await this.getParsedTransactionWithRetry(
         signatureInfo.signature,
