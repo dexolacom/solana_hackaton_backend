@@ -37,7 +37,6 @@ export class ListenerService implements OnModuleInit {
 
   private initializeConnection() {
     // Connect to the Solana devnet
-    console.log('initializeConnection', this.config.get('SOLANA_RPC_URL'));
     this.connection = new Connection(
       this.config.get('SOLANA_RPC_URL'),
       'confirmed',

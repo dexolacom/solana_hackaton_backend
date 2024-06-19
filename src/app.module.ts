@@ -9,6 +9,7 @@ import { RateModule } from './rate/rate.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { ListenerModule } from './listener/listener.module';
+import { FaucetModule } from './faucet/faucet.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ListenerModule } from './listener/listener.module';
     CacheModule.register(),
     PortfolioModule,
     ListenerModule,
+    FaucetModule,
   ],
   controllers: [AppController],
   providers: [],
