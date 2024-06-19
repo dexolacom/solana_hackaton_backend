@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class AddProjectDto {
   @ApiProperty({
@@ -38,4 +38,19 @@ export class AddProjectResponseDto {
     description: 'message',
   })
   readonly message: string;
+}
+
+export class GetPortfolioDto {
+  @ApiProperty({
+    example: '73ce753e-715e-4b1d-85eb-2139b6404c27',
+    description: 'Project id',
+  })
+  @IsUUID()
+  readonly projectId: string;
+
+  @ApiProperty({
+    example: 14,
+    description: 'Portfolio id',
+  })
+  readonly portfolioId: number;
 }
