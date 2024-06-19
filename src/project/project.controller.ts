@@ -1,6 +1,10 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { AddProjectDto, AddProjectResponseDto } from './dto/add-project.dto';
+import {
+  AddProjectDto,
+  AddProjectResponseDto,
+  GetPortfolioDto,
+} from './dto/add-project.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Project API')
@@ -35,6 +39,16 @@ export class ProjectController {
     // type: AddProjectResponseDto,
   })
   findOne(@Param('id') id: string) {
-    return this.projectService.getProjectTokens(id);
+    return this.projectService.getProjectTokensOld(id);
+  }
+
+  @Post('portfolio')
+  @ApiOperation({ summary: 'Get portfolio' })
+  @ApiResponse({
+    status: 201,
+    // type: AddProjectResponseDto,
+  })
+  getPortfolio(@Body() dto: GetPortfolioDto) {
+    return this.projectService.getProjectTokens(dto);
   }
 }
