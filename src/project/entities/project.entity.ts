@@ -17,7 +17,7 @@ export class Project {
   @Column({ unique: true, name: 'collection_id' })
   collectionId: number;
 
-  @Column({ name: 'total_amount', default: 0 })
+  @Column({ name: 'total_amount', default: 0, type: 'float' })
   totalAmount: number;
 
   @Column()
