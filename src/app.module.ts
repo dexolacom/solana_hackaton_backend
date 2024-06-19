@@ -7,6 +7,8 @@ import { TokenModule } from './token/token.module';
 import { ProjectModule } from './project/project.module';
 import { RateModule } from './rate/rate.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { PortfolioModule } from './portfolio/portfolio.module';
+import { ListenerModule } from './listener/listener.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { CacheModule } from '@nestjs/cache-manager';
     ProjectModule,
     RateModule,
     CacheModule.register(),
+    PortfolioModule,
+    ListenerModule,
   ],
   controllers: [AppController],
   providers: [],
