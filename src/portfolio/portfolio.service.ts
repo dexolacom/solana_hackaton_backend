@@ -35,6 +35,7 @@ export class PortfolioService {
   async findOneByProject(id: number, projectId: string) {
     return await this.portfolioRepository.findOne({
       where: { portfolioId: id, project: { id: projectId } },
+      relations: ['project'],
     });
   }
 
